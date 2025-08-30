@@ -201,10 +201,11 @@ echo "  ... (showing first 10 items only)"
 
 # Use rsync to copy all files from temp dir to repo, deleting files that disappeared upstream
 # Exclude the .git and .github folders from deletion to preserve Git repo and workflow config
-echo "Syncing upstream content to repository (preserving .git and .github folders)..."
+echo "Syncing upstream content to repository (preserving .git and .github folders and README.md)..."
 rsync -av --delete \
       --exclude '.git/' \
       --exclude '.github/' \
+      --exclude 'README.md' \
       "$tmp_dir"/ ./
 echo "✓ Content synchronization completed"
 
