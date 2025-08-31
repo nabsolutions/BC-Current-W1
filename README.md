@@ -1,18 +1,18 @@
 # Business Central W1 Repository
 
-This repository holds the current W1 version of the Buisness Central Apps.
+This repository holds the current W1 version of the Business Central Apps.
 
 The purpose is to quickly be able to compare every version to find changes and to be used by
-the GitHub Coding Agent to analyze the the apps to better extend the functionality.
+the GitHub Coding Agent to analyze the apps to better extend the functionality.
 
 
 ## Structure
 
-This repository contains multible applications, structured as follows:
+This repository contains multiple applications, structured as follows:
 
 - Each application is in its own folder, named after the application.
 - Each application folder contains a 'source' folder with all the source files for that app.
-- The 'source' folder contains a app.json that defines the app and its dependencies.
+- The 'source' folder contains an app.json file that defines the app and its dependencies.
 
 
 ### List of Apps in this Repository
