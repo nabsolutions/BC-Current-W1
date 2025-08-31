@@ -24,8 +24,10 @@ jobs:
           git config user.email "bc-w1-bot@users.noreply.github.com"
 
       - name: Ensure script is executable
-        run: chmod +x .github/scripts/update_main_from_w1.sh
+        run: chmod +x .github/scripts/update_main.sh
 
       - name: Sync main from upstream
         run: |
-          ./.github/scripts/update_main_from_w1.sh
+          ./.github/scripts/update_main.sh
+        env:
+          BRANCH_PREFIX: 'w1-'

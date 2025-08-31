@@ -18,9 +18,8 @@ set -euo pipefail  # Exit on error, unset variable, or failed pipe
 SCRIPT_VERSION="2.1.1"
 
 UPSTREAM_URL="https://github.com/StefanMaron/MSDyn365BC.Code.History.git"  # Upstream repo URL
-BRANCH_PREFIX="w1-"  # Prefix for W1 branches
 
-echo "🚀 Starting Business Central W1 branch sync process (v${SCRIPT_VERSION})"
+echo "🚀 Starting Business Central $BRANCH_PREFIX branch sync process (v${SCRIPT_VERSION})"
 echo "Upstream: $UPSTREAM_URL"
 echo "Branch prefix: $BRANCH_PREFIX"
 echo "Working directory: $(pwd)"
@@ -49,13 +48,13 @@ git fetch --quiet origin
 echo "✓ Origin fetch completed"
 
 # Fetch all w1-* branches from upstream as remote-tracking branches
-echo "Fetching w1-* branches from upstream..."
-git fetch --quiet upstream "+refs/heads/${BRANCH_PREFIX}*:refs/remotes/upstream/${BRANCH_PREFIX}*"
-echo "✓ Upstream w1-* branches fetch completed"
+echo "Fetching $BRANCH_PREFIX* branches from upstream..."
+git fetch --quiet upstream "+refs/heads/$BRANCH_PREFIX*:refs/remotes/upstream/$BRANCH_PREFIX*"
+echo "✓ Upstream $BRANCH_PREFIX* branches fetch completed"
 
 # Debug: Show what branches we got from upstream
-echo "Available upstream w1-* branches:"
-git for-each-ref --format='  %(refname:short)' "refs/remotes/upstream/${BRANCH_PREFIX}*" || echo "  No w1-* branches found"
+echo "Available upstream $BRANCH_PREFIX* branches:"
+git for-each-ref --format='  %(refname:short)' "refs/remotes/upstream/$BRANCH_PREFIX*" || echo "  No $BRANCH_PREFIX* branches found"
 
 # --------------------------------------------------------------------
 # 2) Find the highest-numbered upstream branch (e.g. w1-26)
@@ -68,14 +67,14 @@ echo "=== Step 2: Finding highest-numbered upstream branch (v${SCRIPT_VERSION}) 
 echo "Processing upstream branches to find the latest..."
 
 latest_upstream_branch=$(git for-each-ref --format='%(refname:short)' \
-                         "refs/remotes/upstream/${BRANCH_PREFIX}*" |
+                         "refs/remotes/upstream/$BRANCH_PREFIX*" |
                          sort -t- -k2 -n | tail -1)
 
 echo "Debug: Found branches (sorted by version):"
-git for-each-ref --format='  %(refname:short)' "refs/remotes/upstream/${BRANCH_PREFIX}*" | sort -t- -k2 -n || echo "  No branches found"
+git for-each-ref --format='  %(refname:short)' "refs/remotes/upstream/$BRANCH_PREFIX*" | sort -t- -k2 -n || echo "  No branches found"
 
 if [[ -z "$latest_upstream_branch" ]]; then
-  echo "❌ ERROR: no ${BRANCH_PREFIX} branches found in upstream"
+  echo "❌ ERROR: no $BRANCH_PREFIX branches found in upstream"
   echo "Debug: Checking what refs we have from upstream:"
   git for-each-ref --format='  %(refname)' "refs/remotes/upstream/*" || echo "  No upstream refs found"
   exit 1
@@ -108,7 +107,7 @@ if git rev-parse --verify -q refs/heads/main >/dev/null; then
     # Extract version and SHA from different possible commit message formats
     # New format: "Sync to upstream w1-26 (SHA: abc123)"
     # Old format: "Sync to upstream upstream/w1-26"
-    current_version=$(echo "$sync_commit_msg" | grep -oE "(upstream/)?${BRANCH_PREFIX}[0-9]+" | sed 's|upstream/||' || true)
+    current_version=$(echo "$sync_commit_msg" | grep -oE "(upstream/)?$BRANCH_PREFIX[0-9]+" | sed 's|upstream/||' || true)
     current_sha=$(echo "$sync_commit_msg" | grep -oE "SHA: [a-f0-9]+" | cut -d' ' -f2 || true)
   else
     echo "No previous sync commit found on main"
