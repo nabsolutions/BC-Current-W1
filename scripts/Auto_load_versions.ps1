@@ -5,8 +5,7 @@
 $ErrorActionPreference = "SilentlyContinue"
 
 [System.Collections.ArrayList]$Versions = @()
-# Get-BCArtifactUrl -select All -Type OnPrem -country $country -after ([DateTime]::Today.AddDays(-1)) | % {
-Get-BCArtifactUrl -select All -Type OnPrem -country $country | % {
+Get-BCArtifactUrl -select All -Type Sandbox -country $country  | % {
     [System.Uri]$Url = $_
     $TempString = $Url.AbsolutePath
     [version]$Version = $TempString.Split('/')[2]
@@ -18,7 +17,7 @@ Get-BCArtifactUrl -select All -Type OnPrem -country $country | % {
     $objectProperty.Add('URL', $Url)
     $ourObject = New-Object -TypeName psobject -Property $objectProperty
 
-    if ($Version -ge [version]::Parse('15.0.0.0')) {
+    if ($Version -ge [version]::Parse('23.5.0.0')) {
         $Versions.Add($ourObject)
     }
 }
@@ -30,26 +29,26 @@ $Versions | Sort-Object -Property Country, Version | % {
     
     git fetch --all
 
-    $LastCommit = git log --all --grep="^$($country)-$($version.ToString())$"
+    $LastCommit = git log --all --grep="$($country)-$($version.ToString())"
 
     if ($LastCommit.Length -eq 0) {
         Write-Host "###############################################"
         Write-Host "Processing $($country) - $($Version.ToString())"
         Write-Host "###############################################"
         
-        $LatestCommitIDOfBranchEmpty = git log -n 1 --pretty=format:"%h" "master"
+        $LatestCommitIDOfBranchEmpty = git log -n 1 --pretty=format:"%h" "main"
         if ($LatestCommitIDOfBranchEmpty -eq $null) {
-            $LatestCommitIDOfBranchEmpty = git log -n 1 --pretty=format:"%h" "origin/master"
+            $LatestCommitIDOfBranchEmpty = git log -n 1 --pretty=format:"%h" "origin/main"
         }
 
         if ($Version.Major -gt 15 -and $Version.Build -gt 5) {
-            $CommitIDLastCUFromPreviousMajor = git log --all -n 1 --grep="^$($country)-$($version.Major - 1).5" --pretty=format:"%h"
+            $CommitIDLastCUFromPreviousMajor = git log --all -n 1 --grep="$($country)-$($version.Major - 1).5" --pretty=format:"%h"
         }
         else {
             $CommitIDLastCUFromPreviousMajor = $null
         }
 
-        $BranchAlreadyExists = ((git branch --list -r "origin/$($country)-$($Version.Major)") -ne $null) -or ((git branch --list "$($country)-$($Version.Major)") -ne $null)
+        $BranchAlreadyExists = ((git branch --list -r "*$($country)-$($Version.Major)*") -ne $null) -or ((git branch --list "*$($country)-$($Version.Major)*") -ne $null)
 
         if ($BranchAlreadyExists) {
             git switch "$($country)-$($Version.Major)"
@@ -73,14 +72,14 @@ $Versions | Sort-Object -Property Country, Version | % {
             $LocalizationPath = $Paths
             $PlatformPath = ''
         }
+        $TargetPathOfVersion = $LocalizationPath
 
         #Localization folder
-        
-        $TargetPathOfVersion = (Join-Path $LocalizationPath (Get-ChildItem -Path $LocalizationPath -filter "Applications")[0].Name)
+        $TargetPathOfVersion = (Join-Path $LocalizationPath "Applications.$($country.ToUpper())")
 
         if (-not (Test-Path $TargetPathOfVersion)) {
             #Platform Folder
-            $TargetPathOfVersion = (Join-Path $PlatformPath (Get-ChildItem -Path $PlatformPath -filter "Applications")[0].Name)
+            $TargetPathOfVersion = (Join-Path $PlatformPath "Applications")
         }
         
         & "scripts/UpdateALRepo.ps1" -SourcePath $TargetPathOfVersion -RepoPath (Split-Path $PSScriptRoot -Parent) -Version $version -Localization $country
