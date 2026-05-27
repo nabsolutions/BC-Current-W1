@@ -196,7 +196,7 @@ echo "✓ Upstream content extracted to: $tmp_dir"
 
 # Debug: Show what we got from upstream
 echo "Debug: Contents of upstream snapshot:"
-ls -la "$tmp_dir" | head -10  # Show first 10 items
+ls -la "$tmp_dir" | head -10 || true  # Show first 10 items (|| true prevents broken pipe with pipefail)
 echo "  ... (showing first 10 items only)"
 
 # Use rsync to copy all files from temp dir to repo, deleting files that disappeared upstream
