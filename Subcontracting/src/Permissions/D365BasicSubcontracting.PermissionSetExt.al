@@ -2,15 +2,11 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License. See License.txt in the project root for license information.
 // ------------------------------------------------------------------------------------------------
-namespace Microsoft.EServices.EDocumentConnector.B2Brouter;
+namespace Microsoft.Manufacturing.Subcontracting;
 
-permissionset 6492 "B2Brouter Objects"
+using System.Security.AccessControl;
+
+permissionsetextension 99001502 "D365 BASIC - Subcontracting" extends "D365 BASIC"
 {
-    Access = Public;
-    Assignable = false;
-
-    Permissions = table "B2Brouter Setup" = X,
-                  page "B2Brouter Setup" = X,
-                  codeunit "B2Brouter Integration" = X,
-                  codeunit "B2Brouter Api Management" = X;
+    IncludedPermissionSets = "Subcontract. - Read";
 }

@@ -2,11 +2,21 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License. See License.txt in the project root for license information.
 // ------------------------------------------------------------------------------------------------
-namespace Microsoft.EServices.EDocumentConnector.B2Brouter;
-
-using Microsoft.EServices.EDocument;
-
-permissionsetextension 6492 "D365 User - B2Brouter" extends "E-Doc. Core - User"
+namespace Microsoft.Manufacturing.Subcontracting;
+enum 99001507 "Subc. Purchase Line Type"
 {
-    IncludedPermissionSets = "B2Brouter Edit";
+    Extensible = true;
+
+    value(0; None)
+    {
+        Caption = ' ';
+    }
+    value(1; LastOperation)
+    {
+        Caption = 'Last Operation';
+    }
+    value(2; NotLastOperation)
+    {
+        Caption = 'Not Last Operation';
+    }
 }

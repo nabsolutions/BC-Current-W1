@@ -1,11 +1,11 @@
 {
   "settings": {
+    "allint.enabled": false,
     "al.enableCodeAnalysis": false,
-    "al.enableCodeActions": false,
     "search.exclude": {
       "**.xlf": true
     },
-    "allint.enabled": false
+    "al.enableCodeActions": false
   },
   "folders": [
     {
@@ -313,6 +313,9 @@
     },
     {
       "path": "./Contoso Coffee Demo Dataset Tests/src/TestImplementations"
+    },
+    {
+      "path": "./Subcontracting-Tests/Tests"
     },
     {
       "path": "./Quality Management-Tests/DisabledTests"
