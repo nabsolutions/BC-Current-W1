@@ -50,9 +50,6 @@ codeunit 7314 "Warehouse Availability Mgt."
         case SourceType of
             Database::Job, Database::"Job Planning Line":
                 begin
-                    // Both old (Database::Job) and new (Database::"Job Planning Line") formats 
-                    // should look up reservations with Job Planning Line source type
-                    // Reservation entries always have Source Subtype = Order (2), regardless of caller's SourceSubType
                     ReservEntry.SetSourceFilter(
                       Database::"Job Planning Line", "Job Planning Line Status"::Order.AsInteger(), SourceNo, SourceLineNo, true);
                     ReservEntry.SetSourceFilter('', 0);
@@ -952,6 +949,7 @@ codeunit 7314 "Warehouse Availability Mgt."
         ShipBinTypeFilter := CreatePick.GetBinTypeFilter(1);
 
         if ShipBinTypeFilter <> '' then begin
+            WarehouseEntry.ReadIsolation(IsolationLevel::ReadUnCommitted);
             WarehouseEntry.SetLoadFields("Qty. (Base)");
             WarehouseEntry.SetRange("Item No.", ItemNo);
             WarehouseEntry.SetRange("Location Code", LocationCode);
@@ -973,7 +971,6 @@ codeunit 7314 "Warehouse Availability Mgt."
 
         exit(QtyOnShipmentBins);
     end;
-
 
     [IntegrationEvent(false, false)]
     local procedure OnAfterCalcQtyPicked(var Item: Record Item; var QtyPicked: Decimal; Location: Record Location)
