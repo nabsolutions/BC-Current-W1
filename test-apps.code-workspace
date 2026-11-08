@@ -1,11 +1,11 @@
 {
   "settings": {
-    "al.enableCodeAnalysis": false,
+    "al.enableCodeActions": false,
     "search.exclude": {
       "**.xlf": true
     },
     "allint.enabled": false,
-    "al.enableCodeActions": false
+    "al.enableCodeAnalysis": false
   },
   "folders": [
     {
@@ -46,6 +46,9 @@
     },
     {
       "path": "./Bank Account Reconciliation With AI Tests"
+    },
+    {
+      "path": "./Business Central Mirroring to Fabric Tests"
     },
     {
       "path": "./Business Foundation Test Libraries"
